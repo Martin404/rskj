@@ -645,7 +645,7 @@ public class Program {
         InternalTransaction internalTx = addInternalTx(nonce, getGasLimit(), senderAddress, RskAddress.nullAddress(), endowment, programCode, "create");
         ProgramInvoke programInvoke = programInvokeFactory.createProgramInvoke(
                 this, new DataWord(newAddressBytes), getOwnerAddress(), value, gasLimit,
-                newBalance, null, track, this.invoke.getBlockStore(), byTestingSuite());
+                newBalance, null, track, this.invoke.getBlockStore(), false, byTestingSuite());
 
         ProgramResult programResult = ProgramResult.empty();
         returnDataBuffer = null; // reset return buffer right before the call
@@ -874,7 +874,8 @@ public class Program {
                 this, new DataWord(contextAddress.getBytes()),
                 msg.getType() == MsgType.DELEGATECALL ? getCallerAddress() : getOwnerAddress(),
                 msg.getType() == MsgType.DELEGATECALL ? getCallValue() : msg.getEndowment(),
-                limitToMaxLong(msg.getGas()), contextBalance, data, track, this.invoke.getBlockStore(), byTestingSuite());
+                limitToMaxLong(msg.getGas()), contextBalance, data, track, this.invoke.getBlockStore(),
+                msg.getType() == MsgType.STATICCALL || isStaticCall(), byTestingSuite());
 
         VM vm = new VM(config);
         Program program = new Program(config, programCode, programInvoke, internalTx);
@@ -1110,6 +1111,10 @@ public class Program {
 
     public DataWord getGasLimit() {
         return invoke.getGaslimit().clone();
+    }
+
+    public boolean isStaticCall() {
+        return invoke.isStaticCall();
     }
 
     public ProgramResult getResult() {
@@ -1619,9 +1624,20 @@ public class Program {
         }
     }
 
+    @SuppressWarnings("serial")
+    public static class StaticCallModificationException extends RuntimeException {
+        public StaticCallModificationException() {
+            super("Attempt to call a state modifying opcode inside STATICCALL");
+        }
+    }
+
     public static class ExceptionHelper {
 
         private ExceptionHelper() { }
+
+        public static StaticCallModificationException modificationException() {
+            return new StaticCallModificationException();
+        }
 
         public static OutOfGasException notEnoughOpGas(OpCode op, long opGas, long programGas) {
             return new OutOfGasException("Not enough gas for '%s' operation executing: opGas[%d], programGas[%d];", op, opGas, programGas);
