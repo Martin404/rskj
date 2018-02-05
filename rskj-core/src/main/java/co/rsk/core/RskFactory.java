@@ -172,8 +172,8 @@ public class RskFactory {
                                             JsonRpcWeb3FilterHandler filterHandler,
                                             JsonRpcWeb3ServerHandler serverHandler) {
         return new Web3HttpServer(
-            rskSystemProperties.rpcAddress(),
-            rskSystemProperties.rpcPort(),
+            rskSystemProperties.rpcHttpBindAddress(),
+            rskSystemProperties.rpcHttpPort(),
             rskSystemProperties.soLingerTime(),
             true,
             new CorsConfiguration(rskSystemProperties.corsDomains()),
