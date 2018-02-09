@@ -21,7 +21,7 @@ package co.rsk.core;
 import co.rsk.config.RskSystemProperties;
 import co.rsk.net.NodeBlockProcessor;
 import org.ethereum.core.Blockchain;
-import org.ethereum.core.PendingState;
+import org.ethereum.core.TransactionPool;
 import org.ethereum.core.Repository;
 import org.ethereum.db.BlockStore;
 import org.ethereum.db.ReceiptStore;
@@ -43,7 +43,7 @@ public class RskImpl extends EthereumImpl implements Rsk {
     public RskImpl(ChannelManager channelManager,
                    PeerServer peerServer,
                    ProgramInvokeFactory programInvokeFactory,
-                   PendingState pendingState,
+                   TransactionPool transactionPool,
                    BlockStore blockStore,
                    RskSystemProperties config,
                    CompositeEthereumListener compositeEthereumListener,
@@ -51,7 +51,7 @@ public class RskImpl extends EthereumImpl implements Rsk {
                    NodeBlockProcessor nodeBlockProcessor,
                    Repository repository,
                    Blockchain blockchain) {
-        super(config, channelManager, peerServer, programInvokeFactory, pendingState, blockStore, compositeEthereumListener, receiptStore, repository, blockchain);
+        super(config, channelManager, peerServer, programInvokeFactory, transactionPool, blockStore, compositeEthereumListener, receiptStore, repository, blockchain);
         this.nodeBlockProcessor = nodeBlockProcessor;
     }
 

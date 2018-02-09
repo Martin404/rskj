@@ -86,7 +86,7 @@ public class MinerServerImpl implements MinerServer {
     private final Ethereum ethereum;
     private final BlockStore blockStore;
     private final Blockchain blockchain;
-    private final PendingState pendingState;
+    private final TransactionPool transactionPool;
     private final BlockExecutor executor;
     private final GasLimitCalculator gasLimitCalculator;
     private final ProofOfWorkRule powRule;
@@ -142,7 +142,7 @@ public class MinerServerImpl implements MinerServer {
                            Blockchain blockchain,
                            BlockStore blockStore,
                            ReceiptStore receiptStore,
-                           PendingState pendingState,
+                           TransactionPool transactionPool,
                            Repository repository,
                            MiningConfig miningConfig,
                            @Qualifier("minerServerBlockValidation") BlockValidationRule validationRules,
@@ -154,7 +154,7 @@ public class MinerServerImpl implements MinerServer {
         this.ethereum = ethereum;
         this.blockchain = blockchain;
         this.blockStore = blockStore;
-        this.pendingState = pendingState;
+        this.transactionPool = transactionPool;
         this.miningConfig = miningConfig;
         this.validationRules = validationRules;
         this.nodeBlockProcessor = nodeBlockProcessor;
@@ -716,15 +716,15 @@ public class MinerServerImpl implements MinerServer {
             }
         }
 
-        pendingState.clearPendingState(transactions);
-        pendingState.clearWire(transactions);
+        transactionPool.clearPendingState(transactions);
+        transactionPool.clearWire(transactions);
     }
 
     private List<Transaction> getTransactions(List<Transaction> txsToRemove, Block parent, Coin minGasPrice) {
 
         logger.debug("Starting getTransactions");
 
-        List<Transaction> txs = new MinerUtils().getAllTransactions(pendingState);
+        List<Transaction> txs = new MinerUtils().getAllTransactions(transactionPool);
         logger.debug("txsList size {}", txs.size());
 
         Transaction remascTx = new RemascTransaction(parent.getNumber() + 1);

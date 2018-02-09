@@ -23,7 +23,7 @@ import co.rsk.config.RskSystemProperties;
 import co.rsk.core.Coin;
 import co.rsk.core.ReversibleTransactionExecutor;
 import org.ethereum.core.*;
-import org.ethereum.core.PendingState;
+import org.ethereum.core.TransactionPool;
 import org.ethereum.core.Repository;
 import org.ethereum.db.BlockStore;
 import org.ethereum.db.ReceiptStore;
@@ -58,7 +58,7 @@ public class EthereumImpl implements Ethereum {
     private final ChannelManager channelManager;
     private final PeerServer peerServer;
     private final ProgramInvokeFactory programInvokeFactory;
-    private final PendingState pendingState;
+    private final TransactionPool transactionPool;
     private final BlockStore blockStore;
     private final RskSystemProperties config;
     private final CompositeEthereumListener compositeEthereumListener;
@@ -73,7 +73,7 @@ public class EthereumImpl implements Ethereum {
                         ChannelManager channelManager,
                         PeerServer peerServer,
                         ProgramInvokeFactory programInvokeFactory,
-                        PendingState pendingState,
+                        TransactionPool transactionPool,
                         BlockStore blockStore,
                         CompositeEthereumListener compositeEthereumListener,
                         ReceiptStore receiptStore,
@@ -82,7 +82,7 @@ public class EthereumImpl implements Ethereum {
         this.channelManager = channelManager;
         this.peerServer = peerServer;
         this.programInvokeFactory = programInvokeFactory;
-        this.pendingState = pendingState;
+        this.transactionPool = transactionPool;
         this.blockStore = blockStore;
         this.config = config;
         this.compositeEthereumListener = compositeEthereumListener;
@@ -160,7 +160,7 @@ public class EthereumImpl implements Ethereum {
         final Future<List<Transaction>> listFuture =
                 TransactionExecutor.getInstance().submitTransaction(transactionTask);
 
-        pendingState.addPendingTransaction(transaction);
+        transactionPool.addPendingTransaction(transaction);
 
         return new FutureAdapter<Transaction, List<Transaction>>(listFuture) {
             @Override
@@ -187,7 +187,7 @@ public class EthereumImpl implements Ethereum {
 
     @Override
     public List<Transaction> getWireTransactions() {
-        return pendingState.getWireTransactions();
+        return transactionPool.getWireTransactions();
     }
 
     @Override

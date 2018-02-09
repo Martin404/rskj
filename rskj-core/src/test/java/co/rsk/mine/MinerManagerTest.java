@@ -305,13 +305,13 @@ public class MinerManagerTest {
         Assert.assertEquals(2, blockchain.getBestBlock().getNumber());
 
         snapshotManager.resetSnapshots(blockchain);
-        Assert.assertTrue(blockchain.getPendingState().getWireTransactions().isEmpty());
-        Assert.assertTrue(blockchain.getPendingState().getPendingTransactions().isEmpty());
+        Assert.assertTrue(blockchain.getTransactionPool().getWireTransactions().isEmpty());
+        Assert.assertTrue(blockchain.getTransactionPool().getPendingTransactions().isEmpty());
 
         manager.mineBlock(blockchain, minerClient, minerServer);
 
-        Assert.assertTrue(blockchain.getPendingState().getWireTransactions().isEmpty());
-        Assert.assertTrue(blockchain.getPendingState().getPendingTransactions().isEmpty());
+        Assert.assertTrue(blockchain.getTransactionPool().getWireTransactions().isEmpty());
+        Assert.assertTrue(blockchain.getTransactionPool().getPendingTransactions().isEmpty());
     }
 
     @Test
@@ -362,7 +362,7 @@ public class MinerManagerTest {
         ethereum.repository = blockchain.getRepository();
         ethereum.blockchain = blockchain;
         DifficultyCalculator difficultyCalculator = new DifficultyCalculator(config);
-        return new MinerServerImpl(config, ethereum, blockchain, blockchain.getBlockStore(), null, blockchain.getPendingState(),
+        return new MinerServerImpl(config, ethereum, blockchain, blockchain.getBlockStore(), null, blockchain.getTransactionPool(),
                 blockchain.getRepository(), ConfigUtils.getDefaultMiningConfig(),
                 new BlockValidationRuleDummy(), null,
                 difficultyCalculator, new GasLimitCalculator(config),

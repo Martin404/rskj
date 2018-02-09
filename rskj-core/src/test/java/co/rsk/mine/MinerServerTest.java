@@ -86,12 +86,12 @@ public class MinerServerTest {
 
         List<Transaction> txs = new ArrayList<>(Arrays.asList(tx1));
 
-        PendingState localPendingState = Mockito.mock(PendingState.class);
-        Mockito.when(localPendingState.getPendingTransactions()).thenReturn(txs);
+        TransactionPool localTransactionPool = Mockito.mock(TransactionPool.class);
+        Mockito.when(localTransactionPool.getPendingTransactions()).thenReturn(txs);
 
         BlockUnclesValidationRule unclesValidationRule = Mockito.mock(BlockUnclesValidationRule.class);
         Mockito.when(unclesValidationRule.isValid(Mockito.any())).thenReturn(true);
-        MinerServerImpl minerServer = new MinerServerImpl(config, ethereumImpl, this.blockchain, null, null, localPendingState,
+        MinerServerImpl minerServer = new MinerServerImpl(config, ethereumImpl, this.blockchain, null, null, localTransactionPool,
                 repository, ConfigUtils.getDefaultMiningConfig(), unclesValidationRule,
                 null, DIFFICULTY_CALCULATOR, new GasLimitCalculator(config),
                 new ProofOfWorkRule(config).setFallbackMiningEnabled(false));
@@ -117,7 +117,7 @@ public class MinerServerTest {
         BlockUnclesValidationRule unclesValidationRule = Mockito.mock(BlockUnclesValidationRule.class);
         Mockito.when(unclesValidationRule.isValid(Mockito.any())).thenReturn(true);
         MinerServer minerServer = new MinerServerImpl(config, ethereumImpl, blockchain, null,
-                null, blockchain.getPendingState(), blockchain.getRepository(), ConfigUtils.getDefaultMiningConfig(),
+                null, blockchain.getTransactionPool(), blockchain.getRepository(), ConfigUtils.getDefaultMiningConfig(),
                 unclesValidationRule, null, DIFFICULTY_CALCULATOR,
                 new GasLimitCalculator(config),
                 new ProofOfWorkRule(config).setFallbackMiningEnabled(false));
@@ -164,7 +164,7 @@ public class MinerServerTest {
         BlockUnclesValidationRule unclesValidationRule = Mockito.mock(BlockUnclesValidationRule.class);
         Mockito.when(unclesValidationRule.isValid(Mockito.any())).thenReturn(true);
         MinerServer minerServer = new MinerServerImpl(config, ethereumImpl, blockchain, null,
-                null, blockchain.getPendingState(), blockchain.getRepository(), ConfigUtils.getDefaultMiningConfig(),
+                null, blockchain.getTransactionPool(), blockchain.getRepository(), ConfigUtils.getDefaultMiningConfig(),
                 unclesValidationRule, null, DIFFICULTY_CALCULATOR,
                 new GasLimitCalculator(config),
                 new ProofOfWorkRule(config).setFallbackMiningEnabled(false));
@@ -197,7 +197,7 @@ public class MinerServerTest {
 
         BlockUnclesValidationRule unclesValidationRule = Mockito.mock(BlockUnclesValidationRule.class);
         Mockito.when(unclesValidationRule.isValid(Mockito.any())).thenReturn(true);
-        MinerServer minerServer = new MinerServerImpl(config, ethereumImpl, this.blockchain, null, null, this.blockchain.getPendingState(), blockchain.getRepository(), ConfigUtils.getDefaultMiningConfig(), unclesValidationRule, null, DIFFICULTY_CALCULATOR,
+        MinerServer minerServer = new MinerServerImpl(config, ethereumImpl, this.blockchain, null, null, this.blockchain.getTransactionPool(), blockchain.getRepository(), ConfigUtils.getDefaultMiningConfig(), unclesValidationRule, null, DIFFICULTY_CALCULATOR,
                 new GasLimitCalculator(config),
                 new ProofOfWorkRule(config).setFallbackMiningEnabled(false));
 
@@ -217,7 +217,7 @@ public class MinerServerTest {
 
         BlockUnclesValidationRule unclesValidationRule = Mockito.mock(BlockUnclesValidationRule.class);
         Mockito.when(unclesValidationRule.isValid(Mockito.any())).thenReturn(true);
-        MinerServer minerServer = new MinerServerImpl(config, ethereumImpl, this.blockchain, null, null, this.blockchain.getPendingState(), blockchain.getRepository(), ConfigUtils.getDefaultMiningConfig(), unclesValidationRule, null, DIFFICULTY_CALCULATOR,
+        MinerServer minerServer = new MinerServerImpl(config, ethereumImpl, this.blockchain, null, null, this.blockchain.getTransactionPool(), blockchain.getRepository(), ConfigUtils.getDefaultMiningConfig(), unclesValidationRule, null, DIFFICULTY_CALCULATOR,
                 new GasLimitCalculator(config),
                 new ProofOfWorkRule(config).setFallbackMiningEnabled(false));
         try {
@@ -237,7 +237,7 @@ public class MinerServerTest {
 
         BlockUnclesValidationRule unclesValidationRule = Mockito.mock(BlockUnclesValidationRule.class);
         Mockito.when(unclesValidationRule.isValid(Mockito.any())).thenReturn(true);
-        MinerServer minerServer = new MinerServerImpl(config, ethereumImpl, this.blockchain, null, null, this.blockchain.getPendingState(), blockchain.getRepository(), ConfigUtils.getDefaultMiningConfig(), unclesValidationRule, null, DIFFICULTY_CALCULATOR, new GasLimitCalculator(config),
+        MinerServer minerServer = new MinerServerImpl(config, ethereumImpl, this.blockchain, null, null, this.blockchain.getTransactionPool(), blockchain.getRepository(), ConfigUtils.getDefaultMiningConfig(), unclesValidationRule, null, DIFFICULTY_CALCULATOR, new GasLimitCalculator(config),
                 new ProofOfWorkRule(config).setFallbackMiningEnabled(false));
 
         minerServer.start();
@@ -260,7 +260,7 @@ public class MinerServerTest {
 
         BlockUnclesValidationRule unclesValidationRule = Mockito.mock(BlockUnclesValidationRule.class);
         Mockito.when(unclesValidationRule.isValid(Mockito.any())).thenReturn(true);
-        MinerServer minerServer = new MinerServerImpl(config, ethereumImpl, this.blockchain, null, null, blockchain.getPendingState(), blockchain.getRepository(), ConfigUtils.getDefaultMiningConfig(), unclesValidationRule, null, DIFFICULTY_CALCULATOR, new GasLimitCalculator(config),
+        MinerServer minerServer = new MinerServerImpl(config, ethereumImpl, this.blockchain, null, null, blockchain.getTransactionPool(), blockchain.getRepository(), ConfigUtils.getDefaultMiningConfig(), unclesValidationRule, null, DIFFICULTY_CALCULATOR, new GasLimitCalculator(config),
                 new ProofOfWorkRule(config).setFallbackMiningEnabled(false));
         try {
         minerServer.start();

@@ -62,7 +62,7 @@ public class Web3RskImpl extends Web3Impl {
 
     public Web3RskImpl(Ethereum eth,
                        Blockchain blockchain,
-                       PendingState pendingState,
+                       TransactionPool transactionPool,
                        RskSystemProperties properties,
                        MinerClient minerClient,
                        MinerServer minerServer,
@@ -79,7 +79,7 @@ public class Web3RskImpl extends Web3Impl {
                        BlockProcessor nodeBlockProcessor,
                        HashRateCalculator hashRateCalculator,
                        ConfigCapabilities configCapabilities) {
-        super(eth, blockchain, pendingState, blockStore, receiptStore, properties, minerClient, minerServer, personalModule, ethModule, txPoolModule, channelManager, repository, peerScoringManager, peerServer, nodeBlockProcessor, hashRateCalculator, configCapabilities);
+        super(eth, blockchain, transactionPool, blockStore, receiptStore, properties, minerClient, minerServer, personalModule, ethModule, txPoolModule, channelManager, repository, peerScoringManager, peerServer, nodeBlockProcessor, hashRateCalculator, configCapabilities);
         this.networkStateExporter = networkStateExporter;
         this.blockStore = blockStore;
     }
