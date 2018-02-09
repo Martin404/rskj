@@ -717,11 +717,9 @@ public class MinerServerImpl implements MinerServer {
         }
 
         transactionPool.clearPendingState(transactions);
-        transactionPool.clearWire(transactions);
     }
 
     private List<Transaction> getTransactions(List<Transaction> txsToRemove, Block parent, Coin minGasPrice) {
-
         logger.debug("Starting getTransactions");
 
         List<Transaction> txs = new MinerUtils().getAllTransactions(transactionPool);

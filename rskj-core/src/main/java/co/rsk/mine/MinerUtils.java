@@ -141,10 +141,8 @@ public class MinerUtils {
         TransactionPoolImpl.TransactionSortedSet ret = new TransactionPoolImpl.TransactionSortedSet();
 
         List<org.ethereum.core.Transaction> pendingTransactions = new LinkedList<>(transactionPool.getPendingTransactions());
-        List<org.ethereum.core.Transaction> wireTransactions = new LinkedList<>(transactionPool.getWireTransactions());
 
         ret.addAll(pendingTransactions);
-        ret.addAll(wireTransactions);
 
         return new LinkedList<>(ret);
     }
@@ -158,7 +156,6 @@ public class MinerUtils {
                 BigInteger txNonce = new BigInteger(1, tx.getNonce());
                 RskAddress txSender = tx.getSender();
                 logger.debug("Examining tx={} sender: {} value: {} nonce: {}", hash, txSender, txValue, txNonce);
-
 
                 BigInteger expectedNonce;
 
