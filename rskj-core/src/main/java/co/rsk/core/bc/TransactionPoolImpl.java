@@ -286,16 +286,14 @@ public class TransactionPoolImpl implements TransactionPool {
     public void acceptBlock(Block block) {
         List<Transaction> txs = block.getTransactionsList();
 
-        clearPendingState(txs);
+        removeTransactions(txs);
     }
 
     @VisibleForTesting
     public void retractBlock(Block block) {
         List<Transaction> txs = block.getTransactionsList();
 
-        for (Transaction tx : txs) {
-            this.addTransaction(tx);
-        }
+        this.addTransactions(txs);
     }
 
     @VisibleForTesting
@@ -350,10 +348,12 @@ public class TransactionPoolImpl implements TransactionPool {
     }
 
     @Override
-    public synchronized void clearPendingState(List<Transaction> txs) {
+    public synchronized void removeTransactions(List<Transaction> txs) {
         for (Transaction tx : txs) {
-            pendingTransactions.remove(tx.getHash());
-            logger.trace("Clear pending transaction, hash: [{}]", tx.getHash());
+            Keccak256 khash = tx.getHash();
+            pendingTransactions.remove(khash);
+            queuedTransactions.remove(khash);
+            logger.trace("Clear pending transaction, hash: [{}]", khash);
         }
     }
 
