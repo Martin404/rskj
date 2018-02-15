@@ -107,8 +107,6 @@ public class MinerServerTest {
         assertThat(remascTransaction, instanceOf(RemascTransaction.class));
     }
 
-
-
     @Test
     public void submitBitcoinBlockTwoTags() {
         EthereumImpl ethereumImpl = Mockito.mock(EthereumImpl.class);
@@ -156,6 +154,7 @@ public class MinerServerTest {
             minerServer.stop();
         }
     }
+
     @Test
     public void submitBitcoinBlock() {
         EthereumImpl ethereumImpl = Mockito.mock(EthereumImpl.class);
