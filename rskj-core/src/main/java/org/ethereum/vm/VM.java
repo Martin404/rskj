@@ -21,6 +21,7 @@ package org.ethereum.vm;
 
 import co.rsk.config.RskSystemProperties;
 import co.rsk.core.RskAddress;
+import org.ethereum.config.BlockchainConfig;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.vm.MessageCall.MsgType;
 import org.ethereum.vm.program.Program;
@@ -1636,6 +1637,7 @@ public class VM {
 
     protected void executeOpcode() {
         // Execute operation
+        BlockchainConfig config = program.getBlockchainConfig();
         switch (op.val()) {
             /**
              * Stop and Arithmetic Operations
@@ -1850,6 +1852,9 @@ public class VM {
             case OpCodes.OP_CALLCODE:
             case OpCodes.OP_DELEGATECALL:
             case OpCodes.OP_STATICCALL:
+                if (!config.isRcs230()) {
+                    throw Program.ExceptionHelper.invalidOpCode(program.getCurrentOp());
+                }
                 doCALL();
             break;
             case OpCodes.OP_RETURN: doRETURN();

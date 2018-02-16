@@ -26,6 +26,8 @@ import co.rsk.peg.Bridge;
 import co.rsk.remasc.RemascContract;
 import co.rsk.vm.BitSet;
 import com.google.common.annotations.VisibleForTesting;
+import org.ethereum.config.BlockchainConfig;
+import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.config.Constants;
 import org.ethereum.core.Block;
 import org.ethereum.core.Repository;
@@ -180,11 +182,14 @@ public class Program {
     private static Boolean useDataWordPool = true;
 
     private final RskSystemProperties config;
+    private final BlockchainNetConfig blockchainNetConfig;
+
     boolean isLogEnabled;
     boolean isGasLogEnabled;
 
     public Program(RskSystemProperties config, byte[] ops, ProgramInvoke programInvoke) {
         this.config = config;
+        this.blockchainNetConfig = config.getBlockchainConfig();
         isLogEnabled = logger.isInfoEnabled();
         isGasLogEnabled = gasLogger.isInfoEnabled();
 
@@ -870,13 +875,13 @@ public class Program {
 
         returnDataBuffer = null; // reset return buffer right before the call
         ProgramResult childResult = null;
+
         ProgramInvoke programInvoke = programInvokeFactory.createProgramInvoke(
                 this, new DataWord(contextAddress.getBytes()),
                 msg.getType() == MsgType.DELEGATECALL ? getCallerAddress() : getOwnerAddress(),
                 msg.getType() == MsgType.DELEGATECALL ? getCallValue() : msg.getEndowment(),
                 limitToMaxLong(msg.getGas()), contextBalance, data, track, this.invoke.getBlockStore(),
                 msg.getType() == MsgType.STATICCALL || isStaticCall(), byTestingSuite());
-
         VM vm = new VM(config);
         Program program = new Program(config, programCode, programInvoke, internalTx);
         vm.play(program);
@@ -1421,6 +1426,10 @@ public class Program {
 
         byte[] copiedData = Arrays.copyOfRange(returnDataBuffer, off.intValueSafe(), Math.toIntExact(endPosition));
         return Optional.of(copiedData);
+    }
+
+    public BlockchainConfig getBlockchainConfig() {
+        return blockchainNetConfig.getConfigForBlock(getNumber().longValue());
     }
 
     static class ByteCodeIterator {
