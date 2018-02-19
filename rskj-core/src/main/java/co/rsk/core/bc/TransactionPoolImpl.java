@@ -168,7 +168,7 @@ public class TransactionPoolImpl implements TransactionPool {
 
                 while (succesor.isPresent()) {
                     Transaction found = succesor.get();
-                    this.queuedTransactions.remove(new ByteArrayWrapper(found.getHash()));
+                    this.queuedTransactions.remove(found.getHash());
 
                     if (!this.addTransaction(found)) {
                         break;
@@ -200,7 +200,7 @@ public class TransactionPoolImpl implements TransactionPool {
         }
 
         Keccak256 hash = tx.getHash();
-        logger.trace("add transaction {} {}", toBI(tx.getNonce()), Hex.toHexString(tx.getHash()));
+        logger.trace("add transaction {} {}", toBI(tx.getNonce()), tx.getHash());
 
         Long bnumber = Long.valueOf(getCurrentBestBlockNumber());
 
