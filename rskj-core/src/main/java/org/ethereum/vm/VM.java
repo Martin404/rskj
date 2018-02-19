@@ -1220,7 +1220,7 @@ public class VM {
     }
 
     protected void doSSTORE() {
-        if (program.isStaticCall()) {
+        if (program.isStaticCall() && program.getBlockchainConfig().isRcs230()) {
             throw Program.ExceptionHelper.modificationException();
         }
 
@@ -1363,7 +1363,7 @@ public class VM {
     }
 
     protected void doCREATE(){
-        if (program.isStaticCall()) {
+        if (program.isStaticCall() && program.getBlockchainConfig().isRcs230()) {
             throw Program.ExceptionHelper.modificationException();
         }
 
@@ -1562,7 +1562,7 @@ public class VM {
     }
 
     protected void doSUICIDE(){
-        if (program.isStaticCall()) {
+        if (program.isStaticCall() && program.getBlockchainConfig().isRcs230()) {
             throw Program.ExceptionHelper.modificationException();
         }
 
