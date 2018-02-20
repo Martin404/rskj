@@ -207,7 +207,7 @@ public class MinerServerTest {
 
             //noinspection ConstantConditions
             BtcTransaction coinbase = bitcoinMergedMiningBlock.getTransactions().get(0);
-            SubmitBlockResult result = minerServer.submitBitcoinSolution(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock, coinbase, Collections.singletonList(coinbase.getHashAsString()));
+            SubmitBlockResult result = minerServer.submitBitcoinSolution(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock, coinbase, Collections.singletonList(coinbase.getHashAsString()), 1);
 
             Assert.assertEquals("OK", result.getStatus());
             Assert.assertNotNull(result.getBlockInfo());
@@ -247,8 +247,8 @@ public class MinerServerTest {
 
             //noinspection ConstantConditions
             BtcTransaction coinbase = bitcoinMergedMiningBlock.getTransactions().get(0);
-            List<String> txs = Arrays.asList(coinbase.getHashAsString(), otherTxHash.toString());
-            SubmitBlockResult result = minerServer.submitBitcoinSolution(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock, coinbase, txs);
+            List<String> merkleHashes = Arrays.asList(coinbase.getHashAsString(), otherTxHash.toString());
+            SubmitBlockResult result = minerServer.submitBitcoinSolution(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock, coinbase, merkleHashes, 2);
 
             Assert.assertEquals("OK", result.getStatus());
             Assert.assertNotNull(result.getBlockInfo());

@@ -36,7 +36,8 @@ public interface MinerServer {
     SubmitBlockResult submitBitcoinSolution(String blockHashForMergedMining,
                                             co.rsk.bitcoinj.core.BtcBlock blockWithOnlyHeader,
                                             co.rsk.bitcoinj.core.BtcTransaction coinbase,
-                                            List<String> txHashes);
+                                            List<String> merkleHashes,
+                                            int blockTxnCount);
 
     SubmitBlockResult submitBitcoinBlock(String blockHashForMergedMining, co.rsk.bitcoinj.core.BtcBlock bitcoinMergedMiningBlock);
 
