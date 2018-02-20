@@ -192,7 +192,7 @@ public class MinerServerTest {
 
         BlockUnclesValidationRule unclesValidationRule = Mockito.mock(BlockUnclesValidationRule.class);
         Mockito.when(unclesValidationRule.isValid(Mockito.any())).thenReturn(true);
-        MinerServer minerServer = new MinerServerImpl(config, ethereumImpl, blockchain, null,
+        MinerServer minerServer = new MinerServerImpl(config, ethereumImpl, blockchain, null, null,
                 blockchain.getPendingState(), blockchain.getRepository(), ConfigUtils.getDefaultMiningConfig(),
                 unclesValidationRule, null, DIFFICULTY_CALCULATOR,
                 new GasLimitCalculator(config),
@@ -227,7 +227,7 @@ public class MinerServerTest {
 
         BlockUnclesValidationRule unclesValidationRule = Mockito.mock(BlockUnclesValidationRule.class);
         Mockito.when(unclesValidationRule.isValid(Mockito.any())).thenReturn(true);
-        MinerServer minerServer = new MinerServerImpl(config, ethereumImpl, blockchain, null,
+        MinerServer minerServer = new MinerServerImpl(config, ethereumImpl, blockchain, null, null,
                 blockchain.getPendingState(), blockchain.getRepository(), ConfigUtils.getDefaultMiningConfig(),
                 unclesValidationRule, null, DIFFICULTY_CALCULATOR,
                 new GasLimitCalculator(config),
