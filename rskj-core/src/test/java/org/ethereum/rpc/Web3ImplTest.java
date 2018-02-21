@@ -234,7 +234,7 @@ public class Web3ImplTest {
         Block block1 = new BlockBuilder(world).parent(genesis).transactions(txs).build();
         org.junit.Assert.assertEquals(ImportResult.IMPORTED_BEST, blockChain.tryToConnect(block1));
 
-        Web3Impl web3 = createWeb3(world, transactionPool);
+        Web3Impl web3 = createWeb3(world, transactionPool, null);
         web3.repository = world.getBlockChain().getRepository();
 
         String accountAddress = Hex.toHexString(acc2.getAddress().getBytes());
@@ -255,18 +255,37 @@ public class Web3ImplTest {
         MinerClient minerClient = new SimpleMinerClient();
         PersonalModule personalModule = new PersonalModuleWalletDisabled();
         TxPoolModule txPoolModule = new TxPoolModuleImpl();
-        Web3 web3 = new Web3Impl(ethMock, blockchain, transactionPool, blockStore, null, mockProperties, minerClient, null, personalModule, null, txPoolModule,
-                Web3Mocks.getMockChannelManager(), Web3Mocks.getMockRepository(), null, null, null, null, null);
+        Web3 web3 = new Web3Impl(
+                ethMock,
+                blockchain,
+                transactionPool,
+                blockStore,
+                null,
+                mockProperties,
+                minerClient,
+                null,
+                personalModule,
+                null,
+                txPoolModule,
+                Web3Mocks.getMockChannelManager(),
+                Web3Mocks.getMockRepository(),
+                null,
+                null,
+                null,
+                null,
+                null
+        );
 
         Assert.assertTrue("Node is not mining", !web3.eth_mining());
-    try {
-    minerClient.mine();
+        try {
+            minerClient.mine();
 
-    Assert.assertTrue("Node is mining", web3.eth_mining());
+            Assert.assertTrue("Node is mining", web3.eth_mining());
 
-    } finally {
-        minerClient.stop();
-    }
+        } finally {
+            minerClient.stop();
+        }
+
         Assert.assertTrue("Node is not mining", !web3.eth_mining());
     }
 
@@ -410,7 +429,7 @@ public class Web3ImplTest {
         BlockChainImpl blockChain = world.getBlockChain();
         TransactionPool transactionPool = new TransactionPoolImpl(config, world.getRepository(), blockChain.getBlockStore(), null, null, null, 10, 100);
         transactionPool.processBest(blockChain.getBestBlock());
-        Web3Impl web3 = createWeb3(world, transactionPool);
+        Web3Impl web3 = createWeb3(world, transactionPool, null);
 
         Account acc1 = new AccountBuilder(world).name("acc1").balance(Coin.valueOf(2000000)).build();
         Account acc2 = new AccountBuilder().name("acc2").build();
@@ -926,7 +945,26 @@ public class Web3ImplTest {
         BlockStore blockStore = Web3Mocks.getMockBlockStore();
         RskSystemProperties mockProperties = Web3Mocks.getMockProperties();
         PersonalModule personalModule = new PersonalModuleWalletDisabled();
-        Web3 web3 = new Web3Impl(ethMock, blockchain, transactionPool, blockStore, null, mockProperties, null, minerServerMock, personalModule, null, null, Web3Mocks.getMockChannelManager(), Web3Mocks.getMockRepository(), null, null, null, null, null);
+        Web3 web3 = new Web3Impl(
+                ethMock,
+                blockchain,
+                transactionPool,
+                blockStore,
+                null,
+                mockProperties,
+                null,
+                minerServerMock,
+                personalModule,
+                null,
+                null,
+                Web3Mocks.getMockChannelManager(),
+                Web3Mocks.getMockRepository(),
+                null,
+                null,
+                null,
+                null,
+                null
+        );
 
         Assert.assertEquals("0x" + originalCoinbase, web3.eth_coinbase());
         Mockito.verify(minerServerMock, Mockito.times(1)).getCoinbaseAddress();
@@ -1234,11 +1272,11 @@ public class Web3ImplTest {
     }
 
     private Web3Impl createWeb3() {
-        return createWeb3(Web3Mocks.getMockEthereum(), Web3Mocks.getMockBlockchain(), Web3Mocks.getMockTransactionPool(), Web3Mocks.getMockBlockStore());
+        return createWeb3(Web3Mocks.getMockEthereum(), Web3Mocks.getMockBlockchain(), Web3Mocks.getMockTransactionPool(), Web3Mocks.getMockBlockStore(), null, null, null);
     }
 
     private Web3Impl createWeb3(World world) {
-        return createWeb3(world, (TransactionPool)null);
+        return createWeb3(world, null);
     }
 
     private Web3Impl createWeb3(World world, ReceiptStore receiptStore) {
@@ -1253,8 +1291,8 @@ public class Web3ImplTest {
         return createWeb3(ethMock, world, null);
     }
 
-    private Web3Impl createWeb3(World world, TransactionPool transactionPool) {
-        return createWeb3(Web3Mocks.getMockEthereum(), world, transactionPool);
+    private Web3Impl createWeb3(World world, TransactionPool transactionPool, ReceiptStore receiptStore) {
+        return createWeb3(Web3Mocks.getMockEthereum(), world, transactionPool, receiptStore);
     }
 
     private Web3Impl createWeb3(SimpleEthereum eth, PeerServer peerServer) {
@@ -1266,35 +1304,73 @@ public class Web3ImplTest {
         TxPoolModule txPoolModule = new TxPoolModuleImpl();
         MinerClient minerClient = new SimpleMinerClient();
         ChannelManager channelManager = new SimpleChannelManager();
-        return new Web3RskImpl(eth, blockchain, transactionPool, config, minerClient, Web3Mocks.getMockMinerServer(), personalModule, ethModule, txPoolModule,
-                channelManager, Web3Mocks.getMockRepository(), null, null, null, null, peerServer, null, null, null);
+        return new Web3RskImpl(
+                eth,
+                blockchain,
+                transactionPool,
+                config,
+                minerClient,
+                Web3Mocks.getMockMinerServer(),
+                personalModule,
+                ethModule,
+                txPoolModule,
+                channelManager,
+                Web3Mocks.getMockRepository(),
+                null,
+                null,
+                null,
+                null,
+                peerServer,
+                null,
+                null,
+                null
+        );
     }
 
-    private Web3Impl createWeb3(Ethereum eth, World world) {
+    private Web3Impl createWeb3(Ethereum eth, World world, ReceiptStore receiptStore) {
         BlockChainImpl blockChain = world.getBlockChain();
-        TransactionPool transactionPool = new TransactionPoolImpl(config, world.getRepository(), blockChain.getBlockStore(), blockChain.getReceiptStore(), null, null, 10, 100);
-        return createWeb3(eth, world, transactionPool);
+        TransactionPool transactionPool = new TransactionPoolImpl(config, world.getRepository(), blockChain.getBlockStore(), null, null, null, 10, 100);
+        return createWeb3(eth, world, transactionPool, receiptStore);
     }
 
-    private Web3Impl createWeb3(Ethereum eth, World world, TransactionPool transactionPool) {
-        return createWeb3(eth, world.getBlockChain(), transactionPool, world.getBlockChain().getBlockStore(), null, new SimpleConfigCapabilities());
+    private Web3Impl createWeb3(Ethereum eth, World world, TransactionPool transactionPool, ReceiptStore receiptStore) {
+        return createWeb3(eth, world.getBlockChain(), transactionPool, world.getBlockChain().getBlockStore(), null, new SimpleConfigCapabilities(), receiptStore);
     }
 
     private Web3Impl createWeb3(World world, BlockProcessor blockProcessor, ReceiptStore receiptStore) {
         BlockChainImpl blockChain = world.getBlockChain();
-        TransactionPool transactionPool = new TransactionPoolImpl(config, world.getRepository(), blockChain.getBlockStore(), blockChain.getReceiptStore(), null, null, 10, 100);
-        return createWeb3(Web3Mocks.getMockEthereum(), blockChain, transactionPool, blockChain.getBlockStore(), blockProcessor, new SimpleConfigCapabilities());
+        TransactionPool transactionPool = new TransactionPoolImpl(config, world.getRepository(), blockChain.getBlockStore(), null, null, null, 10, 100);
+        return createWeb3(Web3Mocks.getMockEthereum(), blockChain, transactionPool, blockChain.getBlockStore(), blockProcessor, new SimpleConfigCapabilities(), receiptStore);
     }
 
-    private Web3Impl createWeb3(Ethereum eth, Blockchain blockchain, TransactionPool transactionPool, BlockStore blockStore, BlockProcessor nodeBlockProcessor, ConfigCapabilities configCapabilities) {
+    private Web3Impl createWeb3(Ethereum eth, Blockchain blockchain, TransactionPool transactionPool, BlockStore blockStore, BlockProcessor nodeBlockProcessor, ConfigCapabilities configCapabilities, ReceiptStore receiptStore) {
         wallet = WalletFactory.createWallet();
         PersonalModuleWalletEnabled personalModule = new PersonalModuleWalletEnabled(config, eth, wallet, transactionPool);
-        EthModule ethModule = new EthModule(config, eth, new EthModuleSolidityDisabled(), new EthModuleWalletEnabled(config, eth, wallet, transactionPool));
+        EthModule ethModule = new EthModule(config, eth, blockchain, new EthModuleSolidityDisabled(), new EthModuleWalletEnabled(config, eth, wallet, transactionPool));
         TxPoolModule txPoolModule = new TxPoolModuleImpl();
         MinerClient minerClient = new SimpleMinerClient();
         ChannelManager channelManager = new SimpleChannelManager();
-        return new Web3RskImpl(eth, blockchain, transactionPool, config, minerClient, Web3Mocks.getMockMinerServer(), personalModule, ethModule, txPoolModule,
-                channelManager, Web3Mocks.getMockRepository(), null, null, blockStore, null, null, nodeBlockProcessor, null, configCapabilities);
+        return new Web3RskImpl(
+                eth,
+                blockchain,
+                transactionPool,
+                config,
+                minerClient,
+                Web3Mocks.getMockMinerServer(),
+                personalModule,
+                ethModule,
+                txPoolModule,
+                channelManager,
+                Web3Mocks.getMockRepository(),
+                null,
+                null,
+                blockStore,
+                receiptStore,
+                null,
+                nodeBlockProcessor,
+                null,
+                configCapabilities
+        );
     }
 
     @Test
@@ -1358,10 +1434,29 @@ public class Web3ImplTest {
         Ethereum eth = Web3Mocks.getMockEthereum();
         Blockchain blockchain = Web3Mocks.getMockBlockchain();
         TransactionPool transactionPool = Web3Mocks.getMockTransactionPool();
-        EthModule ethModule = new EthModule(config, eth, new EthModuleSolidityDisabled(), new EthModuleWalletEnabled(config, eth, wallet, null));
+        EthModule ethModule = new EthModule(config, eth, blockchain, new EthModuleSolidityDisabled(), new EthModuleWalletEnabled(config, eth, wallet, null));
         TxPoolModule txPoolModule = new TxPoolModuleImpl();
-        Web3Impl web3 = new Web3RskImpl(eth, blockchain, transactionPool, config, null, null, new PersonalModuleWalletDisabled(), ethModule, txPoolModule,
-                Web3Mocks.getMockChannelManager(), Web3Mocks.getMockRepository(), null, null, null, null, null, null, null, null);
+        Web3Impl web3 = new Web3RskImpl(
+                eth,
+                blockchain,
+                transactionPool,
+                config,
+                null,
+                null,
+                new PersonalModuleWalletDisabled(),
+                ethModule,
+                txPoolModule,
+                Web3Mocks.getMockChannelManager(),
+                Web3Mocks.getMockRepository(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
 
         String contract = "pragma solidity ^0.4.1; contract rsk { function multiply(uint a) returns(uint d) {   return a * 7;   } }";
 
@@ -1370,5 +1465,4 @@ public class Web3ImplTest {
         org.junit.Assert.assertNotNull(result);
         org.junit.Assert.assertEquals(0, result.size());
     }
-
 }
