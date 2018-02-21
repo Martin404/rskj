@@ -22,6 +22,7 @@ package org.ethereum.vm;
 import co.rsk.asm.EVMAssembler;
 import co.rsk.config.RskSystemProperties;
 import co.rsk.core.RskAddress;
+import co.rsk.vm.BytecodeCompiler;
 import org.ethereum.core.Repository;
 import org.ethereum.util.ByteUtil;
 import org.ethereum.vm.program.Program;
@@ -48,7 +49,8 @@ public class VMTest {
 
     private ProgramInvokeMockImpl invoke;
     private Program program;
-    private final RskSystemProperties config = new RskSystemProperties();
+    private final RskSystemProperties
+            config = new RskSystemProperties();
 
     @Before
     public void setup() {
@@ -64,7 +66,7 @@ public class VMTest {
     public void testPUSH1() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("60A0"), invoke);
+        program = new Program(config, compile("PUSH1 0xa0"), invoke);
         String expected = "00000000000000000000000000000000000000000000000000000000000000A0";
 
         program.fullTrace();
@@ -77,7 +79,7 @@ public class VMTest {
     public void testPUSH2() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("61A0B0"), invoke);
+        program = new Program(config, compile("PUSH2 0xa0b0"), invoke);
         String expected = "000000000000000000000000000000000000000000000000000000000000A0B0";
 
         program.fullTrace();
@@ -90,7 +92,7 @@ public class VMTest {
     public void testPUSH3() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("62A0B0C0"), invoke);
+        program = new Program(config, compile("PUSH3 0xA0B0C0"), invoke);
         String expected = "0000000000000000000000000000000000000000000000000000000000A0B0C0";
 
         program.fullTrace();
@@ -103,7 +105,7 @@ public class VMTest {
     public void testPUSH4() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("63A0B0C0D0"), invoke);
+        program = new Program(config, compile("PUSH4 0xA0B0C0D0"), invoke);
         String expected = "00000000000000000000000000000000000000000000000000000000A0B0C0D0";
 
         program.fullTrace();
@@ -116,7 +118,7 @@ public class VMTest {
     public void testPUSH5() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("64A0B0C0D0E0"), invoke);
+        program = new Program(config, compile("PUSH5 0xA0B0C0D0E0"), invoke);
         String expected = "000000000000000000000000000000000000000000000000000000A0B0C0D0E0";
 
         program.fullTrace();
@@ -129,7 +131,7 @@ public class VMTest {
     public void testPUSH6() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("65A0B0C0D0E0F0"), invoke);
+        program = new Program(config, compile("PUSH6 0xA0B0C0D0E0F0"), invoke);
         String expected = "0000000000000000000000000000000000000000000000000000A0B0C0D0E0F0";
 
         program.fullTrace();
@@ -142,7 +144,7 @@ public class VMTest {
     public void testPUSH7() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("66A0B0C0D0E0F0A1"), invoke);
+        program = new Program(config, compile("PUSH7 0xA0B0C0D0E0F0A1"), invoke);
         String expected = "00000000000000000000000000000000000000000000000000A0B0C0D0E0F0A1";
 
         program.fullTrace();
@@ -155,7 +157,7 @@ public class VMTest {
     public void testPUSH8() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("67A0B0C0D0E0F0A1B1"), invoke);
+        program = new Program(config, compile("PUSH8 0xA0B0C0D0E0F0A1B1"), invoke);
         String expected = "000000000000000000000000000000000000000000000000A0B0C0D0E0F0A1B1";
 
         program.fullTrace();
@@ -168,7 +170,7 @@ public class VMTest {
     public void testPUSH9() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("68A0B0C0D0E0F0A1B1C1"), invoke);
+        program = new Program(config, compile("PUSH9 0xA0B0C0D0E0F0A1B1C1"), invoke);
         String expected = "0000000000000000000000000000000000000000000000A0B0C0D0E0F0A1B1C1";
 
         program.fullTrace();
@@ -182,7 +184,7 @@ public class VMTest {
     public void testPUSH10() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("69A0B0C0D0E0F0A1B1C1D1"), invoke);
+        program = new Program(config, compile("PUSH10 0xA0B0C0D0E0F0A1B1C1D1"), invoke);
         String expected = "00000000000000000000000000000000000000000000A0B0C0D0E0F0A1B1C1D1";
 
         program.fullTrace();
@@ -195,7 +197,7 @@ public class VMTest {
     public void testPUSH11() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("6AA0B0C0D0E0F0A1B1C1D1E1"), invoke);
+        program = new Program(config, compile("PUSH11 0xA0B0C0D0E0F0A1B1C1D1E1"), invoke);
         String expected = "000000000000000000000000000000000000000000A0B0C0D0E0F0A1B1C1D1E1";
 
         program.fullTrace();
@@ -208,7 +210,7 @@ public class VMTest {
     public void testPUSH12() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("6BA0B0C0D0E0F0A1B1C1D1E1F1"), invoke);
+        program = new Program(config, compile("PUSH12 0xA0B0C0D0E0F0A1B1C1D1E1F1"), invoke);
         String expected = "0000000000000000000000000000000000000000A0B0C0D0E0F0A1B1C1D1E1F1";
 
         program.fullTrace();
@@ -221,7 +223,7 @@ public class VMTest {
     public void testPUSH13() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("6CA0B0C0D0E0F0A1B1C1D1E1F1A2"), invoke);
+        program = new Program(config, compile("PUSH13 0xA0B0C0D0E0F0A1B1C1D1E1F1A2"), invoke);
         String expected = "00000000000000000000000000000000000000A0B0C0D0E0F0A1B1C1D1E1F1A2";
 
         program.fullTrace();
@@ -234,7 +236,7 @@ public class VMTest {
     public void testPUSH14() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("6DA0B0C0D0E0F0A1B1C1D1E1F1A2B2"), invoke);
+        program = new Program(config, compile("PUSH14 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2"), invoke);
         String expected = "000000000000000000000000000000000000A0B0C0D0E0F0A1B1C1D1E1F1A2B2";
 
         program.fullTrace();
@@ -247,7 +249,7 @@ public class VMTest {
     public void testPUSH15() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("6EA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2"), invoke);
+        program = new Program(config, compile("PUSH15 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2"), invoke);
         String expected = "0000000000000000000000000000000000A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2";
 
         program.fullTrace();
@@ -260,7 +262,7 @@ public class VMTest {
     public void testPUSH16() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("6FA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2"), invoke);
+        program = new Program(config, compile("PUSH16 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2"), invoke);
         String expected = "00000000000000000000000000000000A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2";
 
         program.fullTrace();
@@ -273,7 +275,7 @@ public class VMTest {
     public void testPUSH17() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("70A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2"), invoke);
+        program = new Program(config, compile("PUSH17 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2"), invoke);
         String expected = "000000000000000000000000000000A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2";
 
         program.fullTrace();
@@ -286,7 +288,7 @@ public class VMTest {
     public void testPUSH18() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("71A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2"), invoke);
+        program = new Program(config, compile("PUSH18 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2"), invoke);
         String expected = "0000000000000000000000000000A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2";
 
         program.fullTrace();
@@ -299,7 +301,7 @@ public class VMTest {
     public void testPUSH19() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("72A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3"), invoke);
+        program = new Program(config, compile("PUSH19 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3"), invoke);
         String expected = "00000000000000000000000000A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3";
 
         program.fullTrace();
@@ -312,7 +314,7 @@ public class VMTest {
     public void testPUSH20() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("73A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3"), invoke);
+        program = new Program(config, compile("PUSH20 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3"), invoke);
         String expected = "000000000000000000000000A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3";
 
         program.fullTrace();
@@ -325,7 +327,7 @@ public class VMTest {
     public void testPUSH21() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("74A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3"), invoke);
+        program = new Program(config, compile("PUSH21 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3"), invoke);
         String expected = "0000000000000000000000A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3";
 
         program.fullTrace();
@@ -338,7 +340,7 @@ public class VMTest {
     public void testPUSH22() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("75A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3"), invoke);
+        program = new Program(config, compile("PUSH22 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3"), invoke);
         String expected = "00000000000000000000A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3";
 
         program.fullTrace();
@@ -351,7 +353,7 @@ public class VMTest {
     public void testPUSH23() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("76A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3"), invoke);
+        program = new Program(config, compile("PUSH23 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3"), invoke);
         String expected = "000000000000000000A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3";
 
         program.fullTrace();
@@ -364,7 +366,7 @@ public class VMTest {
     public void testPUSH24() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("77A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3"), invoke);
+        program = new Program(config, compile("PUSH24 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3"), invoke);
         String expected = "0000000000000000A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3";
 
         program.fullTrace();
@@ -377,7 +379,7 @@ public class VMTest {
     public void testPUSH25() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("78A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4"), invoke);
+        program = new Program(config, compile("PUSH25 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4"), invoke);
         String expected = "00000000000000A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4";
 
         program.fullTrace();
@@ -390,7 +392,7 @@ public class VMTest {
     public void testPUSH26() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("79A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4"), invoke);
+        program = new Program(config, compile("PUSH26 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4"), invoke);
         String expected = "000000000000A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4";
 
         program.fullTrace();
@@ -403,7 +405,7 @@ public class VMTest {
     public void testPUSH27() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("7AA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4C4"), invoke);
+        program = new Program(config, compile("PUSH27 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4C4"), invoke);
         String expected = "0000000000A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4C4";
 
         program.fullTrace();
@@ -416,7 +418,7 @@ public class VMTest {
     public void testPUSH28() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("7BA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4C4D4"), invoke);
+        program = new Program(config, compile("PUSH28 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4C4D4"), invoke);
         String expected = "00000000A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4C4D4";
 
         program.fullTrace();
@@ -429,7 +431,7 @@ public class VMTest {
     public void testPUSH29() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("7CA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4C4D4E4"), invoke);
+        program = new Program(config, compile("PUSH29 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4C4D4E4"), invoke);
         String expected = "000000A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4C4D4E4";
 
         program.fullTrace();
@@ -442,7 +444,7 @@ public class VMTest {
     public void testPUSH30() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("7DA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4C4D4E4F4"), invoke);
+        program = new Program(config, compile("PUSH30 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4C4D4E4F4"), invoke);
         String expected = "0000A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4C4D4E4F4";
 
         program.fullTrace();
@@ -455,7 +457,7 @@ public class VMTest {
     public void testPUSH31() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("7EA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4C4D4E4F4A1"), invoke);
+        program = new Program(config, compile("PUSH31 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4C4D4E4F4A1"), invoke);
         String expected = "00A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4C4D4E4F4A1";
 
         program.fullTrace();
@@ -468,7 +470,7 @@ public class VMTest {
     public void testPUSH32() {
 
         VM vm = new VM(config);
-        program = new Program(config, Hex.decode("7FA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4C4D4E4F4A1B1"), invoke);
+        program = new Program(config, compile("PUSH32 0xA0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4C4D4E4F4A1B1"), invoke);
         String expected = "A0B0C0D0E0F0A1B1C1D1E1F1A2B2C2D2E2F2A3B3C3D3E3F3A4B4C4D4E4F4A1B1";
 
         program.fullTrace();
@@ -3093,6 +3095,10 @@ public class VMTest {
         vm.step(program);  // push
         vm.step(program);  // push
         vm.step(program);  // CODEREPLACE
+    }
+
+    private byte[] compile(String code) {
+        return new BytecodeCompiler().compile(code);
     }
 }
 
