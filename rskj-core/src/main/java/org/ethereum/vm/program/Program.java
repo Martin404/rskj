@@ -882,15 +882,17 @@ public class Program {
                 msg.getType() == MsgType.DELEGATECALL ? getCallValue() : msg.getEndowment(),
                 limitToMaxLong(msg.getGas()), contextBalance, data, track, this.invoke.getBlockStore(),
                 msg.getType() == MsgType.STATICCALL || isStaticCall(), byTestingSuite());
+
         VM vm = new VM(config);
         Program program = new Program(config, programCode, programInvoke, internalTx);
         vm.play(program);
         childResult  = program.getResult();
 
         getTrace().merge(program.getTrace());
-        getResult().merge(childResult );
+        getResult().merge(childResult);
 
         boolean childCallSuccessful = true;
+
         if (childResult.getException() != null || childResult.isRevert()) {
             if (isGasLogEnabled) {
                 gasLogger.debug("contract run halted by Exception: contract: [{}], exception: [{}]",
@@ -899,7 +901,7 @@ public class Program {
             }
 
             internalTx.reject();
-            childResult .rejectInternalTransactions();
+            childResult.rejectInternalTransactions();
             childResult.rejectLogInfos();
 
             track.rollback();
