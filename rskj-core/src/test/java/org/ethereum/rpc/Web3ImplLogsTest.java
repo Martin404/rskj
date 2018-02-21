@@ -121,7 +121,7 @@ public class Web3ImplLogsTest {
         SimpleEthereum eth = new SimpleEthereum();
         eth.repository = world.getBlockChain().getRepository();
         eth.blockchain = world.getBlockChain();
-        Web3Impl web3 = createWeb3(eth, world.getBlockChain(), transactionPool, WalletFactory.createWallet());
+        Web3Impl web3 = createWeb3(eth, world.getBlockChain(), transactionPool , WalletFactory.createWallet());
 
         // TODO tricky link to listener
         world.getBlockChain().setListener(web3.setupListener());
@@ -666,16 +666,42 @@ public class Web3ImplLogsTest {
     }
 
     private Web3Impl createWeb3(Blockchain blockchain, TransactionPool transactionPool) {
-        return createWeb3(Web3Mocks.getMockEthereum(), blockchain, transactionPool, WalletFactory.createWallet());
+        return createWeb3(blockchain, transactionPool, null);
+    }
+
+    private Web3Impl createWeb3(Blockchain blockchain, TransactionPool transactionPool, ReceiptStore receiptStore) {
+        return createWeb3(Web3Mocks.getMockEthereum(), blockchain, transactionPool, receiptStore, WalletFactory.createWallet());
     }
 
     private Web3Impl createWeb3(Ethereum eth, Blockchain blockchain, TransactionPool transactionPool, Wallet wallet) {
+        return createWeb3(eth, blockchain, transactionPool, null, wallet);
+    }
+
+    private Web3Impl createWeb3(Ethereum eth, Blockchain blockchain, TransactionPool transactionPool, ReceiptStore receiptStore, Wallet wallet) {
         PersonalModule personalModule = new PersonalModuleWalletEnabled(config, eth, wallet, null);
         EthModule ethModule = new EthModule(config, eth, blockchain, new EthModuleSolidityDisabled(), new EthModuleWalletEnabled(config, eth, wallet, null));
         TxPoolModule txPoolModule = new TxPoolModuleImpl();
-
-        return new Web3RskImpl(eth, blockchain, transactionPool, config, Web3Mocks.getMockMinerClient(), Web3Mocks.getMockMinerServer(),
-                personalModule, ethModule, txPoolModule, Web3Mocks.getMockChannelManager(), Web3Mocks.getMockRepository(), null, null, blockchain.getBlockStore(), null, null, null, null, new SimpleConfigCapabilities());
+        return new Web3RskImpl(
+                eth,
+                blockchain,
+                transactionPool,
+                config,
+                Web3Mocks.getMockMinerClient(),
+                Web3Mocks.getMockMinerServer(),
+                personalModule,
+                ethModule,
+                txPoolModule,
+                Web3Mocks.getMockChannelManager(),
+                Web3Mocks.getMockRepository(),
+                null,
+                null,
+                blockchain.getBlockStore(),
+                receiptStore,
+                null,
+                null,
+                null,
+                new SimpleConfigCapabilities()
+        );
     }
 
     private Web3Impl getWeb3() {
@@ -746,7 +772,7 @@ public class Web3ImplLogsTest {
 
         TransactionPool transactionPool = new TransactionPoolImpl(config, world.getRepository(), world.getBlockChain().getBlockStore(), receiptStore, null, null, 10, 100);
 
-        Web3Impl web3 = createWeb3(world.getBlockChain(), transactionPool);
+        Web3Impl web3 = createWeb3(world.getBlockChain(), transactionPool, receiptStore);
         web3.personal_newAccountWithSeed("notDefault");
 
         return web3;
@@ -798,7 +824,7 @@ public class Web3ImplLogsTest {
 
         TransactionPool transactionPool = new TransactionPoolImpl(config, world.getRepository(), blockChain.getBlockStore(), receiptStore, null, null, 10, 100);
 
-        Web3Impl web3 = createWeb3(world.getBlockChain(), transactionPool);
+        Web3Impl web3 = createWeb3(world.getBlockChain(), transactionPool, receiptStore);
         web3.personal_newAccountWithSeed("default");
         web3.personal_newAccountWithSeed("notDefault");
         return web3;
