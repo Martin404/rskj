@@ -557,13 +557,12 @@ public class TransactionPoolImplTest {
     }
 
     private static TransactionPoolImpl createSampleNewTransactionPool(BlockChainImpl blockChain) {
-        TransactionPoolImpl transactionPool = new TransactionPoolImpl(config, blockChain.getRepository(), blockChain.getBlockStore(), blockChain.getReceiptStore(), new ProgramInvokeFactoryImpl(), new BlockExecutorTest.SimpleEthereumListener(), 10, 100);
+        TransactionPoolImpl transactionPool = new TransactionPoolImpl(config, blockChain.getRepository(), blockChain.getBlockStore(), null, new ProgramInvokeFactoryImpl(), new BlockExecutorTest.SimpleEthereumListener(), 10, 100);
         transactionPool.processBest(blockChain.getBestBlock());
         return transactionPool;
     }
 
     private static TransactionPoolImpl createSampleNewTransactionPoolWithAccounts(int naccounts, Coin balance, BlockChainImpl blockChain) {
-
         Block best = blockChain.getStatus().getBestBlock();
         Repository repository = blockChain.getRepository();
 
@@ -580,7 +579,7 @@ public class TransactionPoolImplTest {
         best.setStateRoot(repository.getRoot());
         best.flushRLP();
 
-        TransactionPoolImpl transactionPool = new TransactionPoolImpl(config, blockChain.getRepository(), blockChain.getBlockStore(), blockChain.getReceiptStore(), new ProgramInvokeFactoryImpl(), new BlockExecutorTest.SimpleEthereumListener(), 10, 100);
+        TransactionPoolImpl transactionPool = new TransactionPoolImpl(config, blockChain.getRepository(), blockChain.getBlockStore(), null, new ProgramInvokeFactoryImpl(), new BlockExecutorTest.SimpleEthereumListener(), 10, 100);
         blockChain.setTransactionPool(transactionPool);
 
         return transactionPool;
