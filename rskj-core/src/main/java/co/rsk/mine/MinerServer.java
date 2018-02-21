@@ -35,11 +35,20 @@ public interface MinerServer {
 
     boolean isRunning();
 
-    SubmitBlockResult submitBitcoinSolution(String blockHashForMergedMining,
-                                            BtcBlock blockWithOnlyHeader,
-                                            BtcTransaction coinbase,
-                                            List<String> merkleHashes,
-                                            int blockTxnCount);
+    SubmitBlockResult submitBitcoinBlockPartialMerkle(
+            String blockHashForMergedMining,
+            BtcBlock blockWithOnlyHeader,
+            BtcTransaction coinbase,
+            List<String> merkleHashes,
+            int blockTxnCount
+    );
+
+    SubmitBlockResult submitBitcoinBlockTransactions(
+            String blockHashForMergedMining,
+            BtcBlock blockWithOnlyHeader,
+            BtcTransaction coinbase,
+            List<String> txHashes
+    );
 
     SubmitBlockResult submitBitcoinBlock(String blockHashForMergedMining, BtcBlock bitcoinMergedMiningBlock);
 
